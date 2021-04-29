@@ -1,0 +1,47 @@
+0. Setting up pi4
+https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up
+To check storage of pi4, run: df -Bm
+To check memory of pi4, run: free -h
+Note: had to get a monitor, HDMI to micro-HDMI cable, keyboard and mouse
+
+1. Installing packages
+sudo apt-get install python3-venv
+pip3 install virtualenv
+python3 -m venv pi4FaceRecognition
+source pi4FaceRecognition/bin/activate -------------------check using "echo $PATH" and/or "which python3"
+python3 -m pip install --upgrade pip
+pip3 install opencv-contrib-python 
+(for pi4, pip3 install opencv-contrib-python==4.1.0.25, then fix missing .so files using
+https://blog.piwheels.org/how-to-work-out-the-missing-dependencies-for-a-python-package/)
+pip3 install imutils
+pip3 install boost
+pip3 install cmake
+pip3 install dlib
+pip3 install face_recognition
+Note: To deactivate virtualenv, run: deactivate
+
+2. Building dataset
+python3 build_face_dataset.py --cascade haarcascade_frontalface_default.xml --output dataset/calvin
+
+3. Training model
+python3 encode_faces.py --dataset dataset --encodings encodings.pickle --detection-method hog
+
+4. Recognize my face at runtime
+python3 pi_face_recognition.py --cascade haarcascade_frontalface_default.xml  --encodings encodings.pickle
+
+Extra:
+- Transferring files from pc to pi4:
+	https://howchoo.com/pi/how-to-transfer-files-to-the-raspberry-pi
+	$ scp -r Documents/pi-face-recognition/ pi@10.0.0.170:/home/pi/pi4FaceRecognition
+	
+References:
+https://www.programmersought.com/article/91051404957/
+https://www.pyimagesearch.com/2018/06/11/how-to-build-a-custom-face-recognition-dataset/
+https://www.pyimagesearch.com/2018/06/25/raspberry-pi-face-recognition/
+https://zetcode.com/python/argparse/
+https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up
+https://www.raspberrypi.org/forums/viewtopic.php?t=38417
+https://www.raspberrypi.org/forums/viewtopic.php?t=243546
+https://blog.piwheels.org/how-to-work-out-the-missing-dependencies-for-a-python-package/
+
+
